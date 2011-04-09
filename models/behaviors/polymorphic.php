@@ -41,6 +41,7 @@ class PolymorphicBehavior extends ModelBehavior {
 		'classField' => 'class',
 		'foreignKey' => 'foreign_id'
 	);
+
 /**
  * setup method
  *
@@ -52,6 +53,7 @@ class PolymorphicBehavior extends ModelBehavior {
 	function setup(&$model, $config = array()) {
 		$this->settings[$model->alias] = am ($this->_defaultSettings, $config);
 	}
+
 /**
  * afterFind method
  *
@@ -108,4 +110,3 @@ class PolymorphicBehavior extends ModelBehavior {
 		return $results;
 	}
 }
-?>
