@@ -85,4 +85,36 @@ class ActivityFeedTest extends CakeTestCase {
 		);
 		$this->assertEqual($comment['ActivityFeed'], $expected);
 	}
+
+	public function testDelete() {
+		$this->Post->create();
+		$this->Post->save(
+			array(
+				'title' => 'Test Post 1',
+				'body' => 'Test Post 1 Body',
+				'activity_feed_user_id' => '1',
+				'active' => '1'
+			)
+		);
+
+		$count = $this->ActivityFeed->find('count', array(
+			'recursive' => -1,
+			'conditions' => array(
+				'model' => 'ActivityFeedPost',
+				'foreign_key' => $this->Post->getLastInsertId()
+			)
+		));
+		$this->assertEqual($count, 1);
+
+		$this->Post->delete($this->Post->id);
+
+		$count = $this->ActivityFeed->find('count', array(
+			'recursive' => -1,
+			'conditions' => array(
+				'model' => 'ActivityFeedPost',
+				'foreign_key' => $this->Post->getLastInsertId()
+			)
+		));
+		$this->assertEqual($count, 0);
+	}
 }

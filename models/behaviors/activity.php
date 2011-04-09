@@ -163,7 +163,7 @@ class ActivityBehavior extends ModelBehavior {
 			"verb" => $sentence['verb'],
 			"preposition" => $sentence['preposition'],
 			"object" => $sentence['object']
-			);
+		);
 		$binded = false;
 		if (!isset($Model->ActivityFeed)) {
 			$Model->bindModel(array("hasOne" => array("ActivityFeed")));
@@ -238,5 +238,19 @@ class ActivityBehavior extends ModelBehavior {
 			}
 		}
 		return $sentence;
+	}
+
+	function beforeDelete(&$Model, $cascade = true) {
+		$sentence = $this->buildSentence(&$Model, $Model->id);
+		$conditions = array(
+			'model' => $Model->alias,
+			'foreign_key' => $Model->id,
+			'subject' => $sentence['subject'],
+			'verb' => $sentence['verb'],
+			'preposition' => $sentence['preposition'],
+			'object' => $sentence['object']
+		);
+		$Model->ActivityFeed->deleteAll($conditions);
+		return true;
 	}
 }
