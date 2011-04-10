@@ -1,7 +1,7 @@
 <?php 
-/* activity_feed schema generated on: 2011-04-09 15:31:00 : 1302373860*/
-class activity_feedSchema extends CakeSchema {
-	var $name = 'activity_feed';
+/* ActivityFeed schema generated on: 2011-04-09 21:31:03 : 1302395463*/
+class ActivityFeedSchema extends CakeSchema {
+	var $name = 'ActivityFeed';
 
 	function before($event = array()) {
 		return true;
@@ -12,9 +12,9 @@ class activity_feedSchema extends CakeSchema {
 
 	var $activity_feeds = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-		'user_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'index'),
+		'user_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'index', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'key' => 'index', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'foreign_key' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'subject' => array('type' => 'text', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'verb' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 50, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'preposition' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 50, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
