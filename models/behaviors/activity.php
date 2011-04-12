@@ -177,7 +177,6 @@ class ActivityBehavior extends ModelBehavior {
 		if ($binded) {
 			$Model->unbindModel(array("hasOne" => array("ActivityFeed")));
 		}
-
 	}
 
 	function buildSentence(&$Model, $primaryKey) {
@@ -250,7 +249,19 @@ class ActivityBehavior extends ModelBehavior {
 			'preposition' => $sentence['preposition'],
 			'object' => $sentence['object']
 		);
+
+		$binded = false;
+		if (!isset($Model->ActivityFeed)) {
+			$Model->bindModel(array("hasOne" => array("ActivityFeed")));
+			$binded = true;
+		}
+
 		$Model->ActivityFeed->deleteAll($conditions);
+
+		if ($binded) {
+			$Model->unbindModel(array("hasOne" => array("ActivityFeed")));
+		}
+
 		return true;
 	}
 }
