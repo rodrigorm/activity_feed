@@ -1,7 +1,6 @@
 <?php
-App::import('Core', array('AppModel', 'Model'));
-App::import('Plugin', array('ActivityFeed.ActivityFeedAppModel'));
-App::import('Model', array('ActivityFeed.ActivityFeed'));
+App::uses('AppModel', 'Model');
+App::uses('ActivityFeed', 'ActivityFeed.Model');
 require_once('activity_feed.models.php');
 
 class ActivityFeedTest extends CakeTestCase {
