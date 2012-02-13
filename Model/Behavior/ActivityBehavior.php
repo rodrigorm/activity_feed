@@ -1,4 +1,7 @@
 <?php
+App::uses('ActivityFeed', 'Model');
+App::uses('ActivityFeedAppModel', 'Model');
+
 class ActivityBehavior extends ModelBehavior {
 	var $_defaultSettings = array(
 		'sentence' => array(
