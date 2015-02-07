@@ -50,7 +50,7 @@ class PolymorphicBehavior extends ModelBehavior {
  * @return void
  * @access public
  */
-	function setup(&$model, $config = array()) {
+	function setup(Model $model, $config = array()) {
 		$this->settings[$model->alias] = am ($this->_defaultSettings, $config);
 	}
 
@@ -63,7 +63,7 @@ class PolymorphicBehavior extends ModelBehavior {
  * @access public
  * @return void
  */
-	function afterFind (&$model, $results, $primary = false) {
+	function afterFind (Model $model, $results, $primary = false) {
 		extract($this->settings[$model->alias]);
 		if ($primary && isset($results[0][$model->alias][$classField]) && $model->recursive > 0) {
 			foreach ($results as $key => $result) {

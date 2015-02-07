@@ -19,7 +19,7 @@ class ActivityBehavior extends ModelBehavior {
 
 	var $runtime = array();
 
-	function setup(&$Model, $config = array()) {
+	function setup(Model $Model, $config = array()) {
 		$this->settings[$Model->alias] = Set::merge($this->_defaultSettings, $config);
 	}
 
@@ -28,13 +28,13 @@ class ActivityBehavior extends ModelBehavior {
 * 1. Created, no saveOn Conditions, onSave.created = true
 * 2. Created, no saveOn Conditions, onSave.created = false //do nothing
 * 3. Created, has saveOn Conditions, onSave.created = true
-* 4. Created, has saveOn Conditions, onSave.created = false //do nothing 
+* 4. Created, has saveOn Conditions, onSave.created = false //do nothing
 * 5. Updated, no saveOn Conditions, onSave.created = true //do nothing
 * 6. Updated, no saveOn Conditions, onSave.created = false //always save activity
-* 7. Updated, has saveOn conditions, onSave.created = true //do nothing 
-* 8. Updated, has saveOn conditions, onSave.created = false 
+* 7. Updated, has saveOn conditions, onSave.created = true //do nothing
+* 8. Updated, has saveOn conditions, onSave.created = false
 */
-	function beforeSave(&$Model) {
+	function beforeSave(Model $Model) {
 		$data = array();
 		if (!empty($this->settings[$Model->alias]['saveOn']['conditions'])) {
 			if (isset($Model->data[$Model->alias])) {
@@ -44,7 +44,7 @@ class ActivityBehavior extends ModelBehavior {
 			}
 			if (!empty($data)) {
 				if (isset($data[$Model->primaryKey])) {
-					$this->runtime[$Model->alias]['primaryKey'] = $data[$Model->primaryKey]; 
+					$this->runtime[$Model->alias]['primaryKey'] = $data[$Model->primaryKey];
 					unset($data);
 				} else if (isset($Model->id)) {
 					$this->runtime[$Model->alias]['primaryKey'] = $Model->id;
@@ -54,7 +54,7 @@ class ActivityBehavior extends ModelBehavior {
 		return true;
 	}
 
-	function afterSave(&$Model, $created) {
+	function afterSave(Model $Model, $created) {
 		$saveActivity = false;
 		$validateActivity = false;
 		$primaryKey = null;
@@ -62,13 +62,13 @@ class ActivityBehavior extends ModelBehavior {
 			if (empty($this->settings[$Model->alias]['saveOn']['conditions'])) {
 				if ($this->settings[$Model->alias]['saveOn']['created']) {
 					//Use Case 1
-					$primaryKey = $Model->getLastInsertId(); 
+					$primaryKey = $Model->getLastInsertId();
 					$saveActivity = true;
 
 				} else {
 					//Use Case 2
 					//do nothing
-				} 
+				}
 			} else {
 				if ($this->settings[$Model->alias]['saveOn']['created']) {
 					//Use Case 3
@@ -78,7 +78,7 @@ class ActivityBehavior extends ModelBehavior {
 					//Use Case 4
 					$primaryKey = $Model->getLastInsertId();
 					$validateActivity = true;
-				} 
+				}
 			}
 		} else {
 			if (empty($this->settings[$Model->alias]['saveOn']['conditions'])) {
@@ -89,7 +89,7 @@ class ActivityBehavior extends ModelBehavior {
 					//Use Case 6
 					//always happens - not implemented yet
 					//$saveActivity = true;
-				} 
+				}
 			} else {
 				if ($this->settings[$Model->alias]['saveOn']['created']) {
 					//Use Case 7
@@ -98,7 +98,7 @@ class ActivityBehavior extends ModelBehavior {
 					//Use Case 8
 					$primaryKey = $this->runtime[$Model->alias]['primaryKey'];
 					$validateActivity = true;
-				} 
+				}
 			}
 		}
 
@@ -129,7 +129,7 @@ class ActivityBehavior extends ModelBehavior {
 
 	function validateConditions(&$Model, $primaryKey) {
 		if (!empty($this->settings[$Model->alias]['saveOn']['conditions'])) {
-			$data = $this->getFieldsForConditions(&$Model, $primaryKey);
+			$data = $this->getFieldsForConditions($Model, $primaryKey);
 			if (isset($data[$Model->alias])) {
 				$data = $data[$Model->alias];
 			}
@@ -145,8 +145,8 @@ class ActivityBehavior extends ModelBehavior {
 	function getUserId(&$Model, $primaryKey) {
 		$userForeignKey = $this->settings[$Model->alias]['userForeignKey'];
 		$user_id = $Model->find("first", array(
-			"fields" => array($userForeignKey), 
-			"recursive" => -1, 
+			"fields" => array($userForeignKey),
+			"recursive" => -1,
 			"conditions" => array( $Model->alias. '.' .$Model->primaryKey => $primaryKey)
 			));
 		if ($user_id) {
@@ -157,7 +157,7 @@ class ActivityBehavior extends ModelBehavior {
 
 	function saveActivity(&$Model, $primaryKey) {
 		$user_id = $this->getUserId($Model, $primaryKey);
-		$sentence = $this->buildSentence(&$Model, $primaryKey);
+		$sentence = $this->buildSentence($Model, $primaryKey);
 		$data = array(
 			"model" => $Model->alias,
 			"foreign_key" => $primaryKey,
@@ -212,7 +212,7 @@ class ActivityBehavior extends ModelBehavior {
 					$pathes[$key][] = "/".$part['model']."/".$part['field'];
 				}
 			} else {
-				$sentence[$key] = $part; 
+				$sentence[$key] = $part;
 			}
 		}
 
@@ -242,8 +242,8 @@ class ActivityBehavior extends ModelBehavior {
 		return $sentence;
 	}
 
-	function beforeDelete(&$Model, $cascade = true) {
-		$sentence = $this->buildSentence(&$Model, $Model->id);
+	function beforeDelete(Model $Model, $cascade = true) {
+		$sentence = $this->buildSentence($Model, $Model->id);
 		$conditions = array(
 			'model' => $Model->alias,
 			'foreign_key' => $Model->id,
